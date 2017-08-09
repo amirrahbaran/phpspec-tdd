@@ -1,17 +1,24 @@
 {
-    "name": "rdsysco/phpspec",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mehrdad Hedayati",
-            "email": "mehrdad.hedayati@rdsysco.com"
-        }
-    ],
-    "require": {
-
-    },
-    "require-dev": {
-        "phpspec/phpspec": "^4.0"
+  "name": "rdsysco/phpspec",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mehrdad Hedayati",
+      "email": "mehrdad.hedayati@rdsysco.com"
     }
+  ],
+  "require": {
+  },
+  "require-dev": {
+    "phpspec/phpspec": "^4.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "": "src"
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
 }

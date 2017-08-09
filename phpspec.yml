@@ -1,0 +1,4 @@
+suites:
+    test_suite:
+        namespace: RDSysCo\PHPSpec
+        psr0_prefix: RDSysCo\PHPSpec

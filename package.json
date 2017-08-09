@@ -9,6 +9,13 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-notify": "^3.0.0",
+    "gulp-phpspec": "^0.5.5",
+    "gulp-plumber": "^1.1.0",
+    "gulp-run": "^1.7.1"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3"
   }
 }
