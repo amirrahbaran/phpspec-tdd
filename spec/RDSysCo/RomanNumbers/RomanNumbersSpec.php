@@ -86,4 +86,12 @@ class RomanNumbersSpec extends ObjectBehavior
         $this->convert(984)->shouldReturn("CMLXXXIV");
     }
 
+    function it_throws_invalid_argument_exception_for_zero() {
+        $this->shouldThrow(\InvalidArgumentException::class)->during("convert", [0]);
+    }
+
+    function it_throws_invalid_argument_exception_for_negative_numbers() {
+        $this->shouldThrow(\InvalidArgumentException::class)->during('convert', [-1]);
+    }
+
 }

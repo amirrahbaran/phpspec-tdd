@@ -24,6 +24,8 @@ class RomanNumbers
 
     public function convert($number)
     {
+        $this->protect($number);
+
         $converted = "";
 
         foreach (self::$lookup as $factor => $char) {
@@ -33,5 +35,12 @@ class RomanNumbers
         }
 
         return $converted;
+    }
+
+    private function protect($number)
+    {
+        if($number <= 0) {
+            throw new \InvalidArgumentException();
+        }
     }
 }
