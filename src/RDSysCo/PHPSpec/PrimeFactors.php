@@ -6,6 +6,6 @@ class PrimeFactors
 {
     public function generate($number)
     {
-        return 1;
+        return $number == 1 ? [] : [$number];
     }
 }

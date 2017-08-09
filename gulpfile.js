@@ -4,12 +4,9 @@ var run = require('gulp-run');
 var plumber = require('gulp-plumber');
 var notify = require('gulp-notify');
 
-process.env.DISABLE_NOTIFIER=true;
-
 
 gulp.task('test', function() {
-    gulp.src('spec/**/*.php')
-        .pipe(run('clear'))
+    gulp.src('phpspec.yml')
         .pipe(phpspec('phpspec run', { 'verbose': 'v', notify: true }))
         .on('error', notify.onError({
             title: "Crap",
