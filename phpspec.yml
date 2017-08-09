@@ -5,3 +5,6 @@ suites:
     roman_suite:
         namespace: RDSysCo\RomanNumbers
         psr0_prefix: RDSysCo\RomanNumbers
+    bowling_suite:
+        namespace: RDSysCo\Bowling
+        psr0_prefix: RDSysCo\Bowling
