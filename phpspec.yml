@@ -1,4 +1,7 @@
 suites:
-    test_suite:
+    prime_suite:
         namespace: RDSysCo\PHPSpec
         psr0_prefix: RDSysCo\PHPSpec
+    roman_suite:
+        namespace: RDSysCo\RomanNumbers
+        psr0_prefix: RDSysCo\RomanNumbers
