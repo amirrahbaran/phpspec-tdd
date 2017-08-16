@@ -14,9 +14,16 @@ class Order
     protected $customer_city;
     protected $customer_country;
     protected $shipping_address;
+    private $total = 0;
 
     public function setItem($code, $price, $description, $quantity)
     {
+//        $item = new Item();
+//        $item->setCode($code);
+//        $item->setPrice($price);
+//        $item->setDescription($description);
+//        $item->setQuantity($quantity);
+
         $this->items[] = array('code' => $code,
             'price' => $price,
             'description' => $description,
@@ -59,48 +66,30 @@ class Order
         return $this->gold_customer;
     }
 
-    public function getTotalAmount()
-    {
-        list($total) = $this->getOrderPrice();
-
-        $total = $this->getOrderDiscount($total);
-
-        return $this->getOrderPriceWithCurrency($total);
-
-    }
-
     public function getTotal()
     {
-        return $this->getTotalAmount();
+        $this->total = $this->getOrderPrice();
+
+        $this->total = $this->getOrderDiscount();
+
+        return $this->getOrderPriceWithCurrency();
     }
 
     /**
-     * @param $total
      * @return mixed
+     * @internal param $total
      */
-    public function getOrderDiscount($total)
+    public function getOrderDiscount()
     {
-// If the customer is gold we apply 40% discount and...
         if ($this->gold_customer) {
-            $total = $total * 0.6;
-            // ...if amount is over 500 we apply further 20% discount
-            if ($total > 500) {
-                $total = $total * 0.8;
-            }
-        } // If the customer is silver we apply 20% discount and...
-        elseif ($this->silver_customer) {
-            $total = $total * 0.8;
-            // ...if amount is over 500 we apply further 10% discount
-            if ($total > 500) {
-                $total = $total * 0.9;
-            }
-        } else {
-            // if customer subscribed no fidelity program we apply 10% over 500
-            if ($total > 500) {
-                $total = $total * 0.9;
-            }
+            $orderDiscount = $this->getGoldenDiscount();
         }
-        return $total;
+        elseif ($this->silver_customer) {
+            $orderDiscount = $this->getSilverDiscount();
+        } else {
+            $orderDiscount = $this->getOrdinaryDiscount();
+        }
+        return $orderDiscount;
     }
 
     /**
@@ -108,33 +97,88 @@ class Order
      */
     public function getOrderPrice()
     {
-        $total = 0;
+        $orderPrice = 0;
         foreach ($this->items as $item) {
-            $currency = '';
-            // we check for the item to be valid
-            if (isset($item['price']) && isset($item['quantity'])) {
-                // we detect currency if indicated
-                $price = explode(' ', $item['price']);
-                if (isset($price[1])) {
-                    $currency = $price[1];
-                }
-                $price = $price[0];
-                $total += $price * $item['quantity'];
+            $item_is_valid = isset($item['price']) && isset($item['quantity']);
+            if ($item_is_valid) {
+                $orderPrice = $this->detectCurrencyIfIndicated($item);
             }
         }
-        return array($total, $currency);
+        return $orderPrice;
     }
 
     /**
-     * @param $total
      * @return float|string
+     * @internal param $total
      * @internal param $currency
      */
-    public function getOrderPriceWithCurrency($total)
+    public function getOrderPriceWithCurrency()
     {
+        $priceWithCurrency = round($this->total, 2);
         if ($this->currency) {
-            return round($total, 2). ' ' . $this->currency;
+            $priceWithCurrency .= ' ' . $this->currency;
         }
-        else return round($total, 2);
+        return $priceWithCurrency;
+    }
+
+    /**
+     * @param $item
+     * @return mixed
+     * @internal param $total
+     */
+    public function detectCurrencyIfIndicated($item)
+    {
+        $orderTotal = 0;
+        $price = explode(' ', $item['price']);
+        if (isset($price[1])) {
+            $this->currency = $price[1];
+        }
+        $price = $price[0];
+        $orderTotal += $price * $item['quantity'];
+        return $orderTotal;
+    }
+
+    /**
+     * @return mixed
+     * @internal param $total
+     */
+    public function getGoldenDiscount()
+    {
+        // If the customer is gold we apply 40% discount and...
+        $orderDiscount = $this->total * 0.6;
+        // ...if amount is over 500 we apply further 20% discount
+        if ($orderDiscount > 500) {
+            $orderDiscount = $orderDiscount * 0.8;
+        }
+        return $orderDiscount;
+    }
+
+    /**
+     * @return mixed
+     * @internal param $total
+     */
+    public function getSilverDiscount()
+    {
+        // If the customer is silver we apply 20% discount and...
+        $orderDiscount = $this->total * 0.8;
+        // ...if amount is over 500 we apply further 10% discount
+        if ($orderDiscount > 500) {
+            $orderDiscount = $orderDiscount * 0.9;
+        }
+        return $orderDiscount;
+    }
+
+    /**
+     * @return mixed
+     * @internal param $total
+     */
+    public function getOrdinaryDiscount()
+    {
+        $orderDiscount = $this->total;
+        // if customer subscribed no fidelity program we apply 10% over 500
+        if ($orderDiscount > 500) {
+            $orderDiscount = $orderDiscount * 0.9;
+        }
+        return $orderDiscount;
     }
 }

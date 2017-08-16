@@ -4,7 +4,6 @@ namespace spec\RDSysCo\Ecommerce;
 
 use RDSysCo\Ecommerce\Order;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class OrderSpec extends ObjectBehavior
 {
@@ -72,5 +71,14 @@ class OrderSpec extends ObjectBehavior
         $this->silver_customer = true;
         $this->setItem(001, 175, 'TestItem1', 4);
         $this->getTotal()->shouldReturn(504.0);
+    }
+
+    function it_should_return_list_of_items()
+    {
+        $this->setItem(001, 101, 'TestItem1', 14);
+        $this->setItem(002, 175, 'TestItem1', 41);
+        $this->setItem(003, 210, 'TestItem1', 22);
+        $this->setItem(004, 40, 'TestItem1', 17);
+        $this->listItems()->shouldBeArray();
     }
 }
