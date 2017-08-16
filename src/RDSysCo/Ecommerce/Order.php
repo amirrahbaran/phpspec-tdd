@@ -58,23 +58,28 @@ class Order
         return $this->gold_customer;
     }
 
+    public function getTotalAmount()
+    {
+        list($total, $currency) = $this->getOrderPrice();
+
+        $total = $this->getOrderDiscount($total);
+
+        return $this->getOrderPriceWithCurrency($currency, $total);
+
+    }
+
     public function getTotal()
     {
-        $total = 0;
-        foreach ($this->items as $item) {
-            $currency = '';
-            // we check for the item to be valid
-            if (isset($item['price']) && isset($item['quantity'])) {
-                // we detect currency if indicated
-                $price = explode(' ', $item['price']);
-                if (isset($price[1])) {
-                    $currency = $price[1];
-                }
-                $price = $price[0];
-                $total += $price * $item['quantity'];
-            }
-        }
-        // If the customer is gold we apply 40% discount and...
+        return $this->getTotalAmount();
+    }
+
+    /**
+     * @param $total
+     * @return mixed
+     */
+    public function getOrderDiscount($total)
+    {
+// If the customer is gold we apply 40% discount and...
         if ($this->gold_customer) {
             $total = $total * 0.6;
             // ...if amount is over 500 we apply further 20% discount
@@ -94,6 +99,38 @@ class Order
                 $total = $total * 0.9;
             }
         }
+        return $total;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderPrice()
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $currency = '';
+            // we check for the item to be valid
+            if (isset($item['price']) && isset($item['quantity'])) {
+                // we detect currency if indicated
+                $price = explode(' ', $item['price']);
+                if (isset($price[1])) {
+                    $currency = $price[1];
+                }
+                $price = $price[0];
+                $total += $price * $item['quantity'];
+            }
+        }
+        return array($total, $currency);
+    }
+
+    /**
+     * @param $currency
+     * @param $total
+     * @return float|string
+     */
+    public function getOrderPriceWithCurrency($currency, $total)
+    {
         if ($currency) {
             return round($total, 2) . ' ' . $currency;
         } else return round($total, 2);

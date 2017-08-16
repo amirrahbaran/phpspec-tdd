@@ -11,3 +11,6 @@ suites:
     ecommerce_suite:
         namespace: RDSysCo\Ecommerce
         psr0_prefix: RDSysCo\Ecommerce
+    oldecommerce_suite:
+        namespace: RDSysCo\OldEcommerce
+        psr0_prefix: RDSysCo\OldEcommerce
