@@ -16,14 +16,10 @@ class Order
     protected $shipping_address;
     private $total = 0;
 
+    const discount_threshold =  500;
+
     public function setItem($code, $price, $description, $quantity)
     {
-//        $item = new Item();
-//        $item->setCode($code);
-//        $item->setPrice($price);
-//        $item->setDescription($description);
-//        $item->setQuantity($quantity);
-
         $this->items[] = array('code' => $code,
             'price' => $price,
             'description' => $description,
@@ -82,12 +78,12 @@ class Order
     public function getOrderDiscount()
     {
         if ($this->gold_customer) {
-            $orderDiscount = $this->getGoldenDiscount();
+            $orderDiscount = $this->getDiscount(0.6, 0.8);
         }
         elseif ($this->silver_customer) {
-            $orderDiscount = $this->getSilverDiscount();
+            $orderDiscount = $this->getDiscount(0.8, 0.9);
         } else {
-            $orderDiscount = $this->getOrdinaryDiscount();
+            $orderDiscount = $this->getDiscount(0, 0.9);
         }
         return $orderDiscount;
     }
@@ -139,45 +135,20 @@ class Order
     }
 
     /**
+     * @param int $discount
+     * @param $discountIfOrderAmountIsOverThreshold
      * @return mixed
      * @internal param $total
      */
-    public function getGoldenDiscount()
-    {
-        // If the customer is gold we apply 40% discount and...
-        $orderDiscount = $this->total * 0.6;
-        // ...if amount is over 500 we apply further 20% discount
-        if ($orderDiscount > 500) {
-            $orderDiscount = $orderDiscount * 0.8;
-        }
-        return $orderDiscount;
-    }
-
-    /**
-     * @return mixed
-     * @internal param $total
-     */
-    public function getSilverDiscount()
-    {
-        // If the customer is silver we apply 20% discount and...
-        $orderDiscount = $this->total * 0.8;
-        // ...if amount is over 500 we apply further 10% discount
-        if ($orderDiscount > 500) {
-            $orderDiscount = $orderDiscount * 0.9;
-        }
-        return $orderDiscount;
-    }
-
-    /**
-     * @return mixed
-     * @internal param $total
-     */
-    public function getOrdinaryDiscount()
+    public function getDiscount($discount = 0, $discountIfOrderAmountIsOverThreshold = 0)
     {
         $orderDiscount = $this->total;
-        // if customer subscribed no fidelity program we apply 10% over 500
-        if ($orderDiscount > 500) {
-            $orderDiscount = $orderDiscount * 0.9;
+        if ($discount !== 0) {
+            $orderDiscount *= $discount;
+        }
+
+        if ($discountIfOrderAmountIsOverThreshold !== 0 && $orderDiscount > self::discount_threshold) {
+            $orderDiscount = $orderDiscount * $discountIfOrderAmountIsOverThreshold;
         }
         return $orderDiscount;
     }
