@@ -8,3 +8,6 @@ suites:
     bowling_suite:
         namespace: RDSysCo\Bowling
         psr0_prefix: RDSysCo\Bowling
+    ecommerce_suite:
+        namespace: RDSysCo\Ecommerce
+        psr0_prefix: RDSysCo\Ecommerce
