@@ -13,6 +13,13 @@ class OrderSpec extends ObjectBehavior
         $this->shouldHaveType(Order::class);
     }
 
+    function it_should_return_total_6_for_2_items_with_3_amount_with_total_less_than_500_with_dollar_currency()
+    {
+        $this->currency = '$';
+        $this->setItem(001, 3, 'TestItem1', 2);
+        $this->getTotal()->shouldEqual('6 $');
+    }
+
     function it_should_return_total_6_for_2_items_with_3_amount_with_total_less_than_500()
     {
         $this->setItem(001, 3, 'TestItem1', 2);

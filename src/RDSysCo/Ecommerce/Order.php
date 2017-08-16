@@ -4,6 +4,7 @@ namespace RDSysCo\Ecommerce;
 
 class Order
 {
+    public $currency = '';
     public $gold_customer = false;
     public $silver_customer = false;
     public $items = array();
@@ -60,11 +61,11 @@ class Order
 
     public function getTotalAmount()
     {
-        list($total, $currency) = $this->getOrderPrice();
+        list($total) = $this->getOrderPrice();
 
         $total = $this->getOrderDiscount($total);
 
-        return $this->getOrderPriceWithCurrency($currency, $total);
+        return $this->getOrderPriceWithCurrency($total);
 
     }
 
@@ -125,14 +126,15 @@ class Order
     }
 
     /**
-     * @param $currency
      * @param $total
      * @return float|string
+     * @internal param $currency
      */
-    public function getOrderPriceWithCurrency($currency, $total)
+    public function getOrderPriceWithCurrency($total)
     {
-        if ($currency) {
-            return round($total, 2) . ' ' . $currency;
-        } else return round($total, 2);
+        if ($this->currency) {
+            return round($total, 2). ' ' . $this->currency;
+        }
+        else return round($total, 2);
     }
 }
