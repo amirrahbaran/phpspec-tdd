@@ -16,7 +16,7 @@ class Order
     protected $shipping_address;
     private $total = 0;
 
-    const discount_threshold =  500;
+    const discount_threshold = 500;
 
     public function setItem($code, $price, $description, $quantity)
     {
@@ -59,6 +59,11 @@ class Order
 
     public function isGoldCustomer()
     {
+        return $this->gold_customer === true;
+    }
+
+    public function getGoldCustomer()
+    {
         return $this->gold_customer;
     }
 
@@ -73,6 +78,11 @@ class Order
     }
 
     public function isSilverCustomer()
+    {
+        return $this->silver_customer === true;
+    }
+
+    public function getSilverCustomer()
     {
         return $this->silver_customer;
     }
@@ -90,9 +100,7 @@ class Order
     public function getTotal()
     {
         $this->total = $this->getOrderPrice();
-
         $this->total = $this->getOrderDiscount();
-
         return $this->getOrderPriceWithCurrency();
     }
 
@@ -104,8 +112,7 @@ class Order
     {
         if ($this->isGoldCustomer()) {
             $orderDiscount = $this->getDiscount(0.6, 0.8);
-        }
-        elseif ($this->isSilverCustomer()) {
+        } elseif ($this->isSilverCustomer()) {
             $orderDiscount = $this->getDiscount(0.8, 0.9);
         } else {
             $orderDiscount = $this->getDiscount(0, 0.9);

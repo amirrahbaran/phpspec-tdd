@@ -86,4 +86,5 @@ class OrderSpec extends ObjectBehavior
         $this->setItem(004, 40, 'TestItem1', 17);
         $this->listItems()->shouldBeArray();
     }
+
 }
