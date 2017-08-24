@@ -5,8 +5,8 @@ namespace RDSysCo\Ecommerce;
 class Order
 {
     public $currency = '';
-    public $gold_customer = false;
-    public $silver_customer = false;
+    private $gold_customer = false;
+    private $silver_customer = false;
     public $items = array();
     protected $first_name;
     protected $last_name;
@@ -62,6 +62,31 @@ class Order
         return $this->gold_customer;
     }
 
+    public function setGoldCustomer()
+    {
+        $this->gold_customer = true;
+    }
+
+    public function unsetGoldCustomer()
+    {
+        $this->gold_customer = false;
+    }
+
+    public function isSilverCustomer()
+    {
+        return $this->silver_customer;
+    }
+
+    public function setSilverCustomer()
+    {
+        $this->silver_customer = true;
+    }
+
+    public function unsetSilverCustomer()
+    {
+        $this->silver_customer = false;
+    }
+
     public function getTotal()
     {
         $this->total = $this->getOrderPrice();
@@ -77,10 +102,10 @@ class Order
      */
     public function getOrderDiscount()
     {
-        if ($this->gold_customer) {
+        if ($this->isGoldCustomer()) {
             $orderDiscount = $this->getDiscount(0.6, 0.8);
         }
-        elseif ($this->silver_customer) {
+        elseif ($this->isSilverCustomer()) {
             $orderDiscount = $this->getDiscount(0.8, 0.9);
         } else {
             $orderDiscount = $this->getDiscount(0, 0.9);
